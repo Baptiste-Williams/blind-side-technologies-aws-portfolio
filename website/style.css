@@ -1,0 +1,161 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    color: white;
+
+    background-image:
+        linear-gradient(
+            rgba(5, 10, 25, 0.75),
+            rgba(5, 10, 25, 0.75)
+        ),
+        url("https://images.unsplash.com/photo-1451187580459-43490279c0fa");
+
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+header {
+    padding: 40px;
+    background-color: rgba(17, 24, 39, 0.9);
+    border-bottom: 2px solid #00d4ff;
+}
+
+h1 {
+    color: #00d4ff;
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+header p {
+    color: #cccccc;
+}
+
+h2,
+h3 {
+    color: #00d4ff;
+}
+
+section {
+    padding: 50px 20px;
+}
+
+.service-box {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 25px;
+    border-radius: 10px;
+
+    background: rgba(0, 0, 0, 0.60);
+
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+}
+
+form {
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 25px;
+
+    background: rgba(0, 0, 0, 0.75);
+
+    border-radius: 10px;
+
+    box-shadow: 0 0 25px rgba(0, 212, 255, 0.3);
+}
+
+input,
+textarea {
+    width: 90%;
+    padding: 12px;
+    margin: 10px;
+
+    border: 1px solid #00d4ff;
+    border-radius: 5px;
+
+    background-color: #111827;
+    color: white;
+
+    font-size: 16px;
+}
+
+textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+button {
+    background-color: #00d4ff;
+    color: black;
+
+    border: none;
+
+    padding: 12px 24px;
+
+    border-radius: 5px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: white;
+}
+
+#themeToggle {
+    margin-top: 15px;
+}
+
+footer {
+    padding: 20px;
+    margin-top: 40px;
+
+    background-color: rgba(17, 24, 39, 0.9);
+}
+
+/* LIGHT MODE */
+
+.light-mode {
+    background-image: none;
+    background-color: #dce6f2;
+    color: #111827;
+}
+
+.light-mode header {
+    background-color: rgba(230, 236, 245, 0.95);
+}
+
+.light-mode footer {
+    background-color: rgba(230, 236, 245, 0.95);
+}
+
+.light-mode .service-box,
+.light-mode form {
+    background-color: rgba(245, 248, 252, 0.95);
+    color: #111827;
+}
+
+.light-mode input,
+.light-mode textarea {
+    background-color: white;
+    color: black;
+    border: 1px solid #777;
+}
+
+.light-mode h1,
+.light-mode h2,
+.light-mode h3 {
+    color: #0066cc;
+}
+
+.light-mode p {
+    color: #222;
+}
+
+.light-mode #themeToggle {
+    background-color: #0066cc;
+    color: white;
+}
