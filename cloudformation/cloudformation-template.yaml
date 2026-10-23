@@ -1,0 +1,160 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: Blind Side Technologies Serverless Web Application
+
+Resources:
+
+  WebsiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: blind-side-technologies-bdw
+
+  ContactStorageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: blind-side-technologies-contact-storage-bdw
+
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+      VersioningConfiguration:
+        Status: Enabled
+
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  ContactLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: bst-contact-handler-role
+
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+
+      Policies:
+        - PolicyName: BSTContactStoragePolicy
+
+          PolicyDocument:
+            Version: '2012-10-17'
+
+            Statement:
+
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                Resource:
+                  - arn:aws:s3:::blind-side-technologies-contact-storage-bdw/*
+
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+
+  ContactLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+
+      FunctionName: bst-contact-handler
+
+      Runtime: python3.13
+
+      Handler: lambda_function.lambda_handler
+
+      Role: !GetAtt ContactLambdaRole.Arn
+
+      Timeout: 30
+
+      Code:
+        ZipFile: |
+          import json
+
+          def lambda_handler(event, context):
+              return {
+                  "statusCode": 200,
+                  "body": json.dumps({
+                      "message": "Blind Side Technologies Lambda is working"
+                  })
+              }
+
+  ContactApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: bst-contact-api
+      ProtocolType: HTTP
+
+      CorsConfiguration:
+        AllowOrigins:
+          - "*"
+        AllowMethods:
+          - POST
+          - OPTIONS
+        AllowHeaders:
+          - Content-Type
+
+  ContactIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref ContactApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !GetAtt ContactLambda.Arn
+      PayloadFormatVersion: '2.0'
+
+  ContactRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref ContactApi
+      RouteKey: POST /contact
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref ContactIntegration
+
+  ContactStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref ContactApi
+      StageName: prod
+      AutoDeploy: true
+
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 100
+        ThrottlingRateLimit: 50
+
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ContactLambda
+      Principal: apigateway.amazonaws.com
+
+Outputs:
+
+  WebsiteBucket:
+    Description: Website Bucket
+    Value: !Ref WebsiteBucket
+
+  ContactStorageBucket:
+    Description: Contact Storage Bucket
+    Value: !Ref ContactStorageBucket
+
+  LambdaFunction:
+    Description: Lambda Function
+    Value: !Ref ContactLambda
+
+  ApiEndpoint:
+    Description: API Endpoint
+    Value: !Sub https://${ContactApi}.execute-api.${AWS::Region}.amazonaws.com/prod
