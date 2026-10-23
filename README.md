@@ -10,6 +10,8 @@ The project demonstrates how multiple AWS services can work together to create a
 
 ## Architecture Diagram
 
+The diagram below shows the overall architecture used for this project.
+
 <img width="1087" height="606" alt="image" src="https://github.com/user-attachments/assets/f7de51bb-e3ad-49b6-a8ae-6cb363ccbc35" />
 
 
@@ -36,7 +38,15 @@ Lambda
 S3 Contact Storage
 ```
 
-The website is hosted in Amazon S3 and delivered through CloudFront. When a visitor submits the contact form, the request is sent to API Gateway, which triggers a Lambda function. The Lambda function processes the request and stores the data as a JSON file in a private S3 bucket.
+The website is hosted in Amazon S3 and delivered through CloudFront. When a visitor submits the contact form, the request is sent to API Gateway, which triggers a 
+Lambda function. The Lambda function processes the request and stores the data as a JSON file in a private S3 bucket.
+
+## Live Website
+The Blind Side Technologies website is hosted in Amazon S3 and delivered through CloudFront.
+
+<img width="1918" height="1078" alt="Live website in browswer" src="https://github.com/user-attachments/assets/05e2c031-66c9-4674-9ed8-33951976c1fb" />
+
+
 
 ## AWS Services Used
 
@@ -72,6 +82,14 @@ IAM was used to securely manage permissions between AWS services and to implemen
 ### AWS CloudFormation
 
 CloudFormation was used to demonstrate Infrastructure as Code (IaC) by defining AWS resources through a template instead of creating everything manually.
+
+## CloudFront Deployment
+CloudFront was configured to provide HTTPS access and improve performance for website visitors.
+
+<img width="1912" height="1078" alt="cloudfront-working" src="https://github.com/user-attachments/assets/22e82551-5563-49f0-8d3f-3f828a938e6c" />
+
+
+
 
 ## What This Project Demonstrates
 
@@ -112,7 +130,17 @@ After troubleshooting the origin configuration, I discovered that the Origin Pro
 
 While testing Lambda, the function returned a KeyError related to the body field.
 
-This occurred because the default Lambda test event did not match the format used by API Gateway. Creating an API Gateway-style test event resolved the error and allowed successful testing.
+This occurred because the default Lambda test event did not match the format used by API Gateway. 
+Creating an API Gateway-style test event resolved the error and allowed successful testing.
+
+## Backend Testing
+Before integrating with the website, the Lambda function was tested independently to verify successful execution.
+
+<img width="1918" height="1078" alt="lambda-test-success" src="https://github.com/user-attachments/assets/b1ed22f8-08c8-4f97-b6dd-ab7d6ac44cdb" />
+
+
+
+
 
 ## Lessons Learned
 
@@ -180,22 +208,28 @@ The following steps can be used to recreate a similar environment.
 
 ## Infrastructure as Code
 
-This repository includes a CloudFormation template that defines key AWS resources used throughout the project.
+A CloudFormation template was created to define and document the AWS resources used by this project.
 
-Resources included:
+The template includes:
 
-- Website S3 bucket
-- Contact storage S3 bucket
-- IAM role
-- IAM policy
-- Lambda function
-- API Gateway resources
+- S3 Website Bucket
+- Contact Storage Bucket
+- IAM Role
+- IAM Policy
+- Lambda Function
+- API Gateway Resources
 
-Using CloudFormation made the environment easier to document and reproduce.
+### CloudFormation Template
+
+<img width="880" height="408" alt="image" src="https://github.com/user-attachments/assets/9d132c42-14a9-43f8-b8b8-1cfe11487189" />
+
+
+The full template is available in the "cloudformation"  folder.
+Using CloudFormation made and can make the environment easier to document and reproduce.
 
 ## Evidence
 
-The evidence folder contains screenshotsoyment
+The evidence folder contains screenshots of deployyment
 - CloudFront configuration
 - Lambda testing
 - API Gateway configuration
